@@ -1,13 +1,13 @@
 <?php
 
-include_once 'includes/db_connect.php';
-include_once 'includes/functions.php';
- 
-sec_session_start();
- 
-if(login_check($mysqli) == true)
+include_once 'database/database.php';
+include_once 'controller/session.php';
+include_once 'controller/login.php';
+
+// Check if user was already logged in
+if(isLoggedIn($database))
 {
-    // User logged in, go to timeline
+    // User was logged in, go to timeline
     header('Location: timeline.php');
 }
 
@@ -47,7 +47,7 @@ if(login_check($mysqli) == true)
                         <p>Twittercık is a place where you can freely express your opinions. The only thing that will be limiting you the 140 characters limit for each message.</p>
                         <p>Happy tweetciking! :)</p>
                         <div style="text-align: center">
-                            <a class="btn btn-success" href="/login.php">I Have an Account</a>&nbsp;<a class="btn btn-success" href="register.php">Register for a New Account</a>
+                            <a class="btn btn-success" href="login.php">I Have an Account</a>&nbsp;<a class="btn btn-success" href="register.php">Register for a New Account</a>
                         </div>
                     </div>
                 </div>

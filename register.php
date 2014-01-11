@@ -1,7 +1,18 @@
 <?php
 
-include_once 'includes/register.inc.php';
-include_once 'includes/functions.php';
+include_once 'database/database.php';
+include_once 'controller/session.php';
+include_once 'controller/login.php';
+
+// Use a secure session
+startSecureSession();
+
+// Check if user was already logged in
+if(isLoggedIn($database))
+{
+    // User was logged in, go to timeline
+    header('Location: timeline.php');
+}
 
 ?>
 
@@ -40,7 +51,7 @@ include_once 'includes/functions.php';
 		                Register to Twittercık
 		            </div>
 		            <div class="panel-body">
-		            	<form method="POST" action="<?php echo esc_url($_SERVER['PHP_SELF']); ?>">
+		            	<form method="POST" action="controller/perform_register.php">
 			                <div class="col-md-10 col-md-offset-1">
 			                    <div class="row row-with-margin">
 			                        <div class="input-group">
@@ -64,10 +75,10 @@ include_once 'includes/functions.php';
 		    </div>
 
 		    <!-- Alert -->
-		    <?php $errorStyle = !empty($error_msg) ? "display: visible;" : "display: none;"; ?>
+		    <?php $errorStyle = (isset($_SESSION['errorMessage']) && !empty($_SESSION['errorMessage'])) ? "display: visible;" : "display: none;"; ?>
 		    <div class="row" style="<?php echo $errorStyle; ?>">
 	            <div class="alert alert-danger">
-	                <p><?php echo $error_msg; ?></p>
+	                <p style="text-align:center;"><?php echo $_SESSION['errorMessage']; unset($_SESSION['errorMessage']); ?></p>
 	            </div>
 	        </div>
 		</div>

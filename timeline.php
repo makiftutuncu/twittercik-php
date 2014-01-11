@@ -1,13 +1,16 @@
 <?php
 
-include_once 'includes/db_connect.php';
-include_once 'includes/functions.php';
- 
-sec_session_start();
+include_once 'database/database.php';
+include_once 'controller/session.php';
+include_once 'controller/login.php';
 
-if(login_check($mysqli) != true)
+// Use a secure session
+startSecureSession();
+
+// Check if user was already logged in
+if(!isLoggedIn($database))
 {
-    // User logged in, go to timeline
+    // User was not logged in, go to timeline
     header('Location: welcome.php');
 }
 
@@ -28,6 +31,8 @@ if(login_check($mysqli) != true)
         <script src="js/jquery-1.9.0.min.js" type="text/javascript"></script>
         <!-- Bootstrap JS integration -->
         <script src="js/bootstrap.min.js" type="text/javascript"></script>
+        <!-- Character counter JS integration -->
+        <script src="js/counter.js" type="text/javascript"></script>
     </head>
     <body>
         <!-- Main logo -->
@@ -41,7 +46,7 @@ if(login_check($mysqli) != true)
 		        <div class="panel panel-success">
 		            <div class="panel-heading nav">
 		                <div class="user-info navbar-text">Welcome <b>@<?php echo $_SESSION['username']; ?></b>!</div>
-		                <form action="includes/logout.php" method="post">
+		                <form action="controller/perform_logout.php" method="post">
 		                	<button class="btn btn-success navbar-btn user-logout" type="submit">Logout</button>
 		                </form>
 		            </div>
@@ -55,13 +60,13 @@ if(login_check($mysqli) != true)
 		                Post a new tweecik
 		            </div>
 		            <div class="panel-body">
-		                <form method="POST" action="timeline.php">
+		                <form method="POST" action="controller/post_tweetcik.php">
 		                    <p>
-		                        <textarea rows="2" id="tweetcik" name="tweetcik" class="form-control input-block-level tweetcik-input" placeholder="Enter your tweetcik here." required></textarea>
+		                        <textarea rows="2" id="tweetcik-area" oninput="ensureTweetcikLength(this);" name="tweetcik" class="form-control input-block-level tweetcik-input" placeholder="Enter your tweetcik here."></textarea>
 		                    </p>
 		                    <p>
-			                    <div id="tweetcik-counter" class="tweetcik-counter">140</div>
-			                    <button class="btn btn-success tweetcik-button" type="submit">Tweetcik!</button>
+			                    <div id="tweetcik-counter" class="tweetcik-counter"></div>
+			                    <button id="tweetcik-button" class="btn btn-success tweetcik-button" type="submit">Tweetcik!</button>
 		                    </p>
 		                </form>
 		            </div>
@@ -75,15 +80,26 @@ if(login_check($mysqli) != true)
 		                Timeline
 		            </div>
 		            <ul class="list-group">
-		            	<!--
-		                <li class="list-group-item">
-		                    <p style="text-align: center">There is no tweetcik posted yet. Why not post one now?</p>
-		                </li>
-		                -->
-		                <li class="list-group-item">
-						    <p><span class="tweetcik-user">@username</span> / <span class="tweetcik-date">date</span></p>
-						    <p>content</p>
-						</li>
+		            	<?php
+
+		            	include 'controller/read_tweetciks.php';
+		            	
+		            	if(isset($tweetciks) && count($tweetciks) > 0)
+		            	{
+		            		foreach (array_reverse($tweetciks) as $tweetcik)
+		            		{
+		            			echo "<li class=\"list-group-item\"><p><span class=\"tweetcik-user\">@"
+		            			. $tweetcik->username . "</span> / <span class=\"tweetcik-date\">"
+		            			. $tweetcik->tweetcikDate . "</span></p><p>"
+		            			. $tweetcik->content . "</p></li>";
+		            		}
+		            	}
+		            	else
+		            	{
+		            		echo "<li class=\"list-group-item\"><p style=\"text-align: center\">There is no tweetcik posted yet. Why not post one now?</p></li>";
+		            	}
+
+		            	?>
 		            </ul>
 		        </div>
 		    </div>

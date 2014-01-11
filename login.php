@@ -1,13 +1,16 @@
 <?php
 
-include_once 'includes/db_connect.php';
-include_once 'includes/functions.php';
- 
-sec_session_start();
+include_once 'database/database.php';
+include_once 'controller/session.php';
+include_once 'controller/login.php';
 
-if(login_check($mysqli) == true)
+// Use a secure session
+startSecureSession();
+
+// Check if user was already logged in
+if(isLoggedIn($database))
 {
-    // User logged in, go to timeline
+    // User was logged in, go to timeline
     header('Location: timeline.php');
 }
 
@@ -48,7 +51,7 @@ if(login_check($mysqli) == true)
 		                Login to Twittercık
 		            </div>
 		            <div class="panel-body">
-		            	<form method="POST" action="includes/process_login.php">
+		            	<form method="POST" action="controller/perform_login.php">
 			                <div class="col-md-10 col-md-offset-1">
 			                    <div class="row row-with-margin">
 			                        <div class="input-group">
@@ -72,9 +75,10 @@ if(login_check($mysqli) == true)
 		    </div>
 
 		    <!-- Alert -->
-		    <div class="row" style="<?php echo (isset($_GET['error']) && $_GET['error'] == 1) ? "display: visible;" : "display: none;"; ?>">
+		    <?php $errorStyle = (isset($_SESSION['errorMessage']) && !empty($_SESSION['errorMessage'])) ? "display: visible;" : "display: none;"; ?>
+		    <div class="row" style="<?php echo $errorStyle; ?>">
 	            <div class="alert alert-danger">
-	                <p>Username or password is invalid! Please try again.</p>
+	                <p style="text-align:center;"><?php echo $_SESSION['errorMessage']; unset($_SESSION['errorMessage']); ?></p>
 	            </div>
 	        </div>
 		</div>
