@@ -16,7 +16,7 @@
     float: left;
 }
 
-.user-logout
+.right-aligned-button
 {
     float: right;
 }
@@ -36,14 +36,24 @@
     float: right;
 }
 
+.tweetcik-user-image
+{
+    width: 64;
+    height: 64px;
+    margin-right: 5px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+}
+
 .tweetcik-user
 {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 .tweetcik-date
 {
-	font-style: italic;
+    font-size: small;
+    font-style: italic;
 }
 
 .dialog-title

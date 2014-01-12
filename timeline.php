@@ -3,6 +3,7 @@
 include_once 'database/database.php';
 include_once 'controller/session.php';
 include_once 'controller/login.php';
+include_once 'controller/user_picture.php';
 
 // Use a secure session
 startSecureSession();
@@ -20,6 +21,7 @@ if(!isLoggedIn($database))
 <html>
     <head>
         <title>Twittercık - Timeline</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- Bootstrap CSS integration -->
         <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -45,10 +47,19 @@ if(!isLoggedIn($database))
 		    <div class="row">
 		        <div class="panel panel-success">
 		            <div class="panel-heading nav">
-		                <div class="user-info navbar-text">Welcome <b>@<?php echo $_SESSION['username']; ?></b>!</div>
-		                <form action="controller/perform_logout.php" method="post">
-		                	<button class="btn btn-success navbar-btn user-logout" type="submit">Logout</button>
-		                </form>
+		            	<table>
+							<tr>
+								<td>
+									<img class="tweetcik-user-image" src="<?php echo getUserPicturePath($_SESSION['username']); ?>" alt="User Image">
+								</td>
+								<td>
+									<div class="user-info navbar-text">Welcome <b>@<?php echo $_SESSION['username']; ?></b>!</div>
+								</td>
+								<span class="right-aligned-button">
+					                <a class="btn btn-success navbar-btn" href="user.php">User Page</a>&nbsp;<a class="btn btn-success navbar-btn" href="controller/perform_logout.php">Logout</a>
+				                </span>
+							</tr>
+						</table>
 		            </div>
 		        </div>
 		    </div>
@@ -88,10 +99,7 @@ if(!isLoggedIn($database))
 		            	{
 		            		foreach (array_reverse($tweetciks) as $tweetcik)
 		            		{
-		            			echo "<li class=\"list-group-item\"><p><span class=\"tweetcik-user\">@"
-		            			. $tweetcik->username . "</span> / <span class=\"tweetcik-date\">"
-		            			. $tweetcik->tweetcikDate . "</span></p><p>"
-		            			. $tweetcik->content . "</p></li>";
+		            			include 'controller/tweetcik_template.php';
 		            		}
 		            	}
 		            	else

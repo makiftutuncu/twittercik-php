@@ -3,15 +3,16 @@
 include_once 'database/database.php';
 include_once 'controller/session.php';
 include_once 'controller/login.php';
+include_once 'controller/user_picture.php';
 
 // Use a secure session
 startSecureSession();
 
 // Check if user was already logged in
-if(isLoggedIn($database))
+if(!isLoggedIn($database))
 {
-    // User was logged in, go to timeline
-    header('Location: timeline.php');
+    // User was not logged in, go to timeline
+    header('Location: welcome.php');
 }
 
 ?>
@@ -19,7 +20,7 @@ if(isLoggedIn($database))
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Twittercık - Login</title>
+        <title>Twittercık - @<?php echo $_SESSION['username']; ?></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- Bootstrap CSS integration -->
@@ -32,45 +33,53 @@ if(isLoggedIn($database))
         <script src="js/jquery-1.9.0.min.js" type="text/javascript"></script>
         <!-- Bootstrap JS integration -->
         <script src="js/bootstrap.min.js" type="text/javascript"></script>
-        <!-- SHA512 JS integration -->
-        <script type="text/JavaScript" src="js/sha512.js"></script> 
-        <!-- Form validation JS integration -->
-        <script type="text/JavaScript" src="js/forms.js"></script> 
     </head>
     <body>
         <!-- Main logo -->
         <a href="/"><img src="img/logo.png" class="logo img-responsive" alt="logo" ></a>
 
         <!-- Contents of the page -->
-        <!-- Container -->
-		<div class="container col-md-4 col-md-offset-4">
-		    <!-- Login panel -->
+        <!-- Main container-->
+		<div class="container col-md-6 col-md-offset-3">
+		    <!-- Current User Picture Panel -->
 		    <div class="row">
 		        <div class="panel panel-success">
-		            <!-- Title -->
 		            <div class="panel-heading dialog-title">
-		                Login to Twittercık
+		                Select Your User Picture
 		            </div>
 		            <div class="panel-body">
-		            	<form method="POST" action="controller/perform_login.php">
-			                <div class="col-md-10 col-md-offset-1">
-			                    <div class="row row-with-margin">
-			                        <div class="input-group">
-			                            <span class="input-group-addon">@</span>
-			                            <input id="username" name="username" type="text" class="form-control" placeholder="Username">
-			                        </div>
-			                    </div>
+		            	<table>
+							<tr>
+								<td>
+									<img class="tweetcik-user-image" src="<?php echo getUserPicturePath($_SESSION['username']); ?>" alt="User Image">
+								</td>
+								<td>
+									<?php $hasUserPicture = hasUserPicture($_SESSION['username']) ? "display: visible;" : "display: none"; ?>
+									<p>This is your current user picture.
+									<span style="<?php echo $hasUserPicture; ?>">&nbsp;|&nbsp;
+										<a href="controller/remove_user_picture.php">Remove Current Picture</a>
+									</span>
+									</p>
+								</td>
+							</tr>
+						</table>
+		            </div>
+		        </div>
+		    </div>
 
-			                    <div class="row row-with-margin">
-			                        <input id="password" name="password" type="password" class="form-control" placeholder="Password">
-			                    </div>
-			                </div>
-			                <div class="row row-with-margin">
-			                    <div style="text-align: center;">
-			                        <button name="login-submit" class="btn btn-success" type="submit" onclick="return validateForm(this.form, this.form.username, this.form.password);">Login</button>
-			                    </div>
-			                </div>
-		                </form>
+		    <!-- Upload User Picture Panel -->
+		    <div class="row">
+		        <div class="panel panel-success">
+		            <div class="panel-heading dialog-title">
+		                Upload a New User Picture
+		            </div>
+		            <div class="panel-body">
+		            	<p>Upload a new picture.</p>
+		            	<p>Only JPEG images are supported. Maximum file size is 200 kilobytes. Use square pictures for best results.</p>
+		            	<form enctype="multipart/form-data" action="controller/upload_user_picture.php" method="POST">
+		            		<p><input type="file" name="file" id="file"></p>
+		            		<p><button class="btn btn-success navbar-btn" type="submit">Upload</button></p>
+		            	</form>
 		            </div>
 		        </div>
 		    </div>
