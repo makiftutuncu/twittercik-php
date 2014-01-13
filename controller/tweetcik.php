@@ -65,4 +65,32 @@ function readAllTweetciks($database)
 	return $tweetciks;
 }
 
+/**
+ * Tries to remove a tweetcik
+ *
+ * @param $tweetcikId Id of the tweetcik
+ * @param $database Database connection object
+ *
+ * @return true if tweetcik is removed successfully, false otherwise
+ */
+function removeTweetcik($tweetcikId, $database)
+{
+	// Prepare a statement avoiding SQL injections to remove the tweetcik
+	if($statement = $database->prepare("DELETE FROM tweetciks WHERE id=?"))
+	{
+		// Bind $tweetcikId to parameter
+		$statement->bind_param('i', $tweetcikId);
+
+        // Execute the prepared query
+		if($statement->execute() && $statement->affected_rows > 0)
+		{
+			// Well done mate!
+			return true;
+		}
+	}
+
+	// Something's wrong, shut the light, heavy thoughts tonight, and they aren't of snow white
+	return false;
+}
+
 ?>

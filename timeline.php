@@ -83,6 +83,14 @@ if(!isLoggedIn($database))
 				</div>
 				<!-- Right Column -->
 				<div class="col-md-7 col-md-offset-1">
+					<!-- Alert -->
+				    <?php $errorStyle = (isset($_SESSION['errorMessage']) && !empty($_SESSION['errorMessage'])) ? "display: visible;" : "display: none;"; ?>
+				    <div class="row" style="<?php echo $errorStyle; ?>">
+			            <div class="alert alert-danger">
+			                <p style="text-align:center;"><?php echo $_SESSION['errorMessage']; unset($_SESSION['errorMessage']); ?></p>
+			            </div>
+			        </div>
+				    
 				    <!-- Timeline -->
 				    <div class="row">
 				        <div class="panel panel-success">
