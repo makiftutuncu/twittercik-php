@@ -45,7 +45,7 @@ if(!isLoggedIn($database))
 		    <div class="row">
 		        <div class="panel panel-success">
 		            <div class="panel-heading dialog-title">
-		                Select Your User Picture
+		                Your User Picture
 		            </div>
 		            <div class="panel-body">
 		            	<table>

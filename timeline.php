@@ -42,74 +42,75 @@ if(!isLoggedIn($database))
 
         <!-- Contents of the page -->
         <!-- Main container-->
-		<div class="container col-md-6 col-md-offset-3">
-		    <!-- User information bar -->
-		    <div class="row">
-		        <div class="panel panel-success">
-		            <div class="panel-heading nav">
-		            	<table>
-							<tr>
-								<td>
-									<img class="tweetcik-user-image" src="<?php echo getUserPicturePath($_SESSION['username']); ?>" alt="User Image">
-								</td>
-								<td>
-									<div class="user-info navbar-text">Welcome <b>@<?php echo $_SESSION['username']; ?></b>!</div>
-								</td>
-								<span class="right-aligned-button">
-					                <a class="btn btn-success navbar-btn" href="user.php">User Page</a>&nbsp;<a class="btn btn-success navbar-btn" href="controller/perform_logout.php">Logout</a>
-				                </span>
-							</tr>
-						</table>
-		            </div>
-		        </div>
-		    </div>
+		<div class="container col-md-8 col-md-offset-2">
+			<div class="row">
+				<!-- Left Column -->
+				<div class="col-md-4">
+				    <!-- User information bar -->
+				    <div class="row">
+				        <div class="panel panel-success">
+				            <div class="panel-heading nav" >
+				            	<br />
+				            	<div style="float: left;">
+				            		<img class="tweetcik-user-image" src="<?php echo getUserPicturePath($_SESSION['username']); ?>" alt="User Image">
+				            	</div>
+				            	<div style="float: right; text-align: right;">
+					            	<p>Welcome <b>@<?php echo $_SESSION['username']; ?></b>!</p>
+									<p><a class="btn btn-success navbar-btn" href="user.php">User Page</a>&nbsp;<a class="btn btn-success navbar-btn" href="controller/perform_logout.php">Logout</a></p>
+				            	</div>
+				            </div>
+				        </div>
+				    </div>
+				    <!-- New tweetcik panel -->
+				    <div class="row">
+				        <div class="panel panel-success">
+				            <div class="panel-heading dialog-title">
+				                Post a new tweecik
+				            </div>
+				            <div class="panel-body">
+				                <form method="POST" action="controller/post_tweetcik.php">
+				                    <p>
+				                        <textarea rows="2" id="tweetcik-area" oninput="ensureTweetcikLength(this);" name="tweetcik" class="form-control input-block-level tweetcik-input" placeholder="Enter your tweetcik here."></textarea>
+				                    </p>
+				                    <p>
+					                    <div id="tweetcik-counter" class="tweetcik-counter"></div>
+					                    <button id="tweetcik-button" class="btn btn-success tweetcik-button" type="submit">Tweetcik!</button>
+				                    </p>
+				                </form>
+				            </div>
+				        </div>
+				    </div>
+				</div>
+				<!-- Right Column -->
+				<div class="col-md-7 col-md-offset-1">
+				    <!-- Timeline -->
+				    <div class="row">
+				        <div class="panel panel-success">
+				            <div class="panel-heading dialog-title">
+				                Timeline
+				            </div>
+				            <ul class="list-group">
+				            	<?php
 
-		    <!-- New tweetcik panel -->
-		    <div class="row">
-		        <div class="panel panel-success">
-		            <div class="panel-heading dialog-title">
-		                Post a new tweecik
-		            </div>
-		            <div class="panel-body">
-		                <form method="POST" action="controller/post_tweetcik.php">
-		                    <p>
-		                        <textarea rows="2" id="tweetcik-area" oninput="ensureTweetcikLength(this);" name="tweetcik" class="form-control input-block-level tweetcik-input" placeholder="Enter your tweetcik here."></textarea>
-		                    </p>
-		                    <p>
-			                    <div id="tweetcik-counter" class="tweetcik-counter"></div>
-			                    <button id="tweetcik-button" class="btn btn-success tweetcik-button" type="submit">Tweetcik!</button>
-		                    </p>
-		                </form>
-		            </div>
-		        </div>
-		    </div>
+				            	include 'controller/read_tweetciks.php';
+				            	
+				            	if(isset($tweetciks) && count($tweetciks) > 0)
+				            	{
+				            		foreach (array_reverse($tweetciks) as $tweetcik)
+				            		{
+				            			include 'controller/tweetcik_template.php';
+				            		}
+				            	}
+				            	else
+				            	{
+				            		echo "<li class=\"list-group-item\"><p style=\"text-align: center\">There is no tweetcik posted yet. Why not post one now?</p></li>";
+				            	}
 
-		    <!-- Timeline -->
-		    <div class="row">
-		        <div class="panel panel-success">
-		            <div class="panel-heading dialog-title">
-		                Timeline
-		            </div>
-		            <ul class="list-group">
-		            	<?php
-
-		            	include 'controller/read_tweetciks.php';
-		            	
-		            	if(isset($tweetciks) && count($tweetciks) > 0)
-		            	{
-		            		foreach (array_reverse($tweetciks) as $tweetcik)
-		            		{
-		            			include 'controller/tweetcik_template.php';
-		            		}
-		            	}
-		            	else
-		            	{
-		            		echo "<li class=\"list-group-item\"><p style=\"text-align: center\">There is no tweetcik posted yet. Why not post one now?</p></li>";
-		            	}
-
-		            	?>
-		            </ul>
-		        </div>
+				            	?>
+				            </ul>
+				        </div>
+				    </div>
+				</div>
 		    </div>
 		</div>
     </body>
